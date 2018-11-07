@@ -1,5 +1,10 @@
 # RuLong/Sms 短信发送扩展
 
+## 安装
+
+```
+$ composer require rulong/sms
+```
 
 ## 短信发送
 

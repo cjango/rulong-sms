@@ -66,6 +66,9 @@ class Facade
 
         if ($Sms) {
             if ($Sms->code == $code) {
+                if ($Sms->used == 1 && config('rulong_sms.once_used')) {
+                    return false;
+                }
                 $Sms->used = 1;
                 $Sms->save();
                 return true;

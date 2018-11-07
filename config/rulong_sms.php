@@ -2,10 +2,10 @@
 
 return [
     // HTTP 请求的超时时间（秒）
-    'timeout'  => 5.0,
+    'timeout'   => 5.0,
 
     // 默认发送配置
-    'default'  => [
+    'default'   => [
         // 网关调用策略，默认：顺序调用
         'strategy' => \Overtrue\EasySms\Strategies\OrderStrategy::class,
         // 默认可用的发送网关
@@ -15,17 +15,20 @@ return [
     ],
 
     // 验证码长度
-    'length'   => 4,
+    'length'    => 4,
+
+    // 验证后立即失效
+    'once_used' => true,
 
     // 模板与通道映射
-    'template' => [
+    'template'  => [
         'DEFAULT'  => '',
         'LOGIN'    => '',
         'REGISTER' => '',
     ],
 
     // 可用的网关配置
-    'gateways' => [
+    'gateways'  => [
         'errorlog'   => [
             'file' => storage_path('logs/easy-sms.log'),
         ],
