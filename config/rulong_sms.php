@@ -1,0 +1,40 @@
+<?php
+
+return [
+    // HTTP 请求的超时时间（秒）
+    'timeout'  => 5.0,
+
+    // 默认发送配置
+    'default'  => [
+        // 网关调用策略，默认：顺序调用
+        'strategy' => \Overtrue\EasySms\Strategies\OrderStrategy::class,
+        // 默认可用的发送网关
+        'gateways' => [
+            'aliyun',
+        ],
+    ],
+    // 可用的网关配置
+    'gateways' => [
+        'errorlog'   => [
+            'file' => storage_path('logs/easy-sms.log'),
+        ],
+        // 阿里云
+        'aliyun'     => [
+            'access_key_id'     => '',
+            'access_key_secret' => '',
+            'sign_name'         => '',
+        ],
+        // 阿里云Rest
+        'aliyunrest' => [
+            'app_key'        => '',
+            'app_secret_key' => '',
+            'sign_name'      => '',
+        ],
+        // 云片
+        'yunpian'    => [
+            'api_key'   => '',
+            'signature' => '',
+        ],
+        // ...  具体参数请参考 https://github.com/overtrue/easy-sms/blob/master/README.md
+    ],
+];
