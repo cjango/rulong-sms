@@ -13,12 +13,23 @@ return [
             'aliyun',
         ],
     ],
+
+    // 验证码长度
+    'length'   => 4,
+
+    // 模板与通道映射
+    'template' => [
+        'DEFAULT'  => '',
+        'LOGIN'    => '',
+        'REGISTER' => '',
+    ],
+
     // 可用的网关配置
     'gateways' => [
         'errorlog'   => [
             'file' => storage_path('logs/easy-sms.log'),
         ],
-        // 阿里云
+        // 阿里云 AccessKeyID：
         'aliyun'     => [
             'access_key_id'     => '',
             'access_key_secret' => '',

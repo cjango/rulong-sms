@@ -2,10 +2,11 @@
 
 namespace RuLong\Sms;
 
+use Illuminate\Support\Facades\DB;
 use Overtrue\EasySms\EasySms;
 use RuLong\Sms\Models\Sms;
 
-class Facades
+class Facade
 {
 
     /**
@@ -19,21 +20,31 @@ class Facades
     public function send(string $mobile, string $channel = 'DEFAULT')
     {
         try {
-            $code = rand(1, 9999999);
+            $config = config('rulong_sms');
 
-            $easySms = new EasySms($config);
-            $easySms->send($mobile, [
-                'template' => '',
-                'data'     => [
-                    'code' => $code,
-                ],
-            ]);
+            if (!isset($config['template'][$channel]) || empty($config['template'][$channel])) {
+                throw new \Exception('不合法的验证通道');
+            }
 
-            Sms::create([
-                'mobile'  => $mobile,
-                'channel' => $channel,
-                'code'    => $code,
-            ]);
+            DB::transaction(function () use ($mobile, $channel, $config) {
+
+                $code = sprintf("%0" . $config['length'] . "d", mt_rand(1, pow(10, $config['length']) - 1));
+
+                $easySms = new EasySms($config);
+                $easySms->send($mobile, [
+                    'template' => $config['template'][$channel],
+                    'data'     => [
+                        'code' => $code,
+                    ],
+                ]);
+
+                Sms::create([
+                    'mobile'  => $mobile,
+                    'channel' => $channel,
+                    'code'    => $code,
+                ]);
+            });
+
             return true;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
@@ -51,6 +62,18 @@ class Facades
      */
     public function check(string $mobile, string $code, string $channel = 'DEFAULT')
     {
+        $Sms = Sms::where('mobile', $mobile)->where('channel', $channel)->orderBy('id', 'desc')->first();
 
+        if ($Sms) {
+            if ($Sms->code == $code) {
+                $Sms->used = 1;
+                $Sms->save();
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
