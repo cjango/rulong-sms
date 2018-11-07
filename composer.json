@@ -24,7 +24,7 @@
                 "RuLong\\Sms\\ServiceProvider"
             ],
             "aliases": {
-                "Sms": "RuLong\\Sms\\Facades\\Sms",
+                "Sms": "RuLong\\Sms\\Facades\\Sms"
             }
         }
     }
