@@ -30,13 +30,15 @@ class Facade
 
                 $code = sprintf("%0" . $config['length'] . "d", mt_rand(1, pow(10, $config['length']) - 1));
 
-                $easySms = new EasySms($config);
-                $easySms->send($mobile, [
-                    'template' => $config['template'][$channel],
-                    'data'     => [
-                        'code' => $code,
-                    ],
-                ]);
+                if ($config['debug'] != true) {
+                    $easySms = new EasySms($config);
+                    $easySms->send($mobile, [
+                        'template' => $config['template'][$channel],
+                        'data'     => [
+                            'code' => $code,
+                        ],
+                    ]);
+                }
 
                 Sms::create([
                     'mobile'  => $mobile,
@@ -66,7 +68,7 @@ class Facade
 
         if ($Sms) {
             if ($Sms->code == $code) {
-                if ($Sms->used == 1 && config('rulong_sms.once_used')) {
+                if ($Sms->used == 1 && config('rulong_sms.once_used') && config('rulong_sms.debug') == false) {
                     return false;
                 }
                 $Sms->used = 1;
