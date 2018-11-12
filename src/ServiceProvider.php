@@ -25,6 +25,9 @@ class ServiceProvider extends LaravelServiceProvider
          * 短信验证码验证
          */
         Validator::extend('sms_check', function ($attribute, $code, $parameters) {
+            if (empty($code)) {
+                return false;
+            }
             $mobileFiled = $parameters[0] ?? 'mobile';
             $channel     = $parameters[1] ?? 'DEFAULT';
             $mobile      = request()->input($mobileFiled);
