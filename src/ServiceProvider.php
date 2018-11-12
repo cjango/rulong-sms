@@ -2,6 +2,7 @@
 
 namespace RuLong\Sms;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
 class ServiceProvider extends LaravelServiceProvider
@@ -19,6 +20,27 @@ class ServiceProvider extends LaravelServiceProvider
             $this->publishes([__DIR__ . '/../config/rulong_sms.php' => config_path('rulong_sms.php')]);
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/');
         }
+
+        /**
+         * 短信验证码验证
+         */
+        Validator::extend('sms_check', function ($attribute, $code, $parameters) {
+            $mobileFiled = $parameters[0] ?? 'mobile';
+            $channel     = $parameters[1] ?? 'DEFAULT';
+            $mobile      = request()->input($mobileFiled);
+            return \Sms::check($mobile, $code, $channel);
+        });
+
+        /**
+         * 手机号验证
+         */
+        Validator::extend('mobile', function ($attribute, $mobile, $parameters) {
+            if (preg_match("/^1[3578]{1}[0-9]{9}$|14[57]{1}[0-9]{8}$|^[0][9]\d{8}$/", $mobile)) {
+                return true;
+            } else {
+                return false;
+            }
+        });
     }
 
     /**
