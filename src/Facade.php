@@ -4,6 +4,7 @@ namespace RuLong\Sms;
 
 use Illuminate\Support\Facades\DB;
 use Overtrue\EasySms\EasySms;
+use RuLong\Sms\Exceptions\SmsSendException;
 use RuLong\Sms\Models\Sms;
 
 class Facade
@@ -23,7 +24,7 @@ class Facade
             $config = config('rulong_sms');
 
             if (!isset($config['template'][$channel]) || empty($config['template'][$channel])) {
-                throw new \Exception('不合法的验证通道');
+                throw new SmsSendException('不合法的验证通道');
             }
 
             DB::transaction(function () use ($mobile, $channel, $config) {
@@ -49,7 +50,7 @@ class Facade
 
             return true;
         } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+            throw new SmsSendException($e->getMessage());
         }
     }
 

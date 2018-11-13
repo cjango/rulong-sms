@@ -2,6 +2,8 @@
 
 namespace RuLong\Sms\Exceptions;
 
-class SmsSendException extends \Exception
+use Exception;
+
+class SmsSendException extends Exception
 {
 }
